@@ -185,7 +185,7 @@ architecture behavioral of control is
           when "000010" => 
             regDst    <= '0';   --X?
             jump      <= '1';
-            branch    <= '1';   --X?
+            branch    <= '0';   --X?
             memRead   <= '0';
             memWrite  <= '0';
             memToReg  <= '1';   --X?
