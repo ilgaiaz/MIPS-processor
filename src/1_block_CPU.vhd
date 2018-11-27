@@ -89,24 +89,25 @@ architecture behavioral of instructionFetch is
     
     sPlusFour <= "00000000000000000000000000000100";
     
+    --Select PC + 4 or branch address
     branchMux : mux
       generic map (32)
       port map (controlSignal => muxBranchControl, signal1 => sAddResult, signal2 => muxBranchExtIn, selectedSignal => sMuxBOut);
-    
+    --Select the previous mux's result or jump address 
     jumpMux : mux
       generic map (32)
       port map (controlSignal => muxJumpControl, signal1 => sMuxBOut, signal2 => muxJumpExtIn, selectedSignal => pcIn);
-      
-    nextInstruction : programCounter
+    --Get previous result and get next address  
+    nextAddress : programCounter
       port map (clk => clk, resetPC => resetProgCounter , nextAddress => pcIn, currentAddress => sOutPC);
-    
+    --Add + 4 to program counter and calc next possible address
     sum : adder
       generic map (32)
       port map (addend1 => sOutPC, addend2 => sPlusFour, sum => sAddResult);
-    
+    --Get address from PC and get instruction to compute
     get_memory : instructionMemory
       port map (instrMemIn => sOutPC, instruction => sStoreInstr);
-    
+    --Store data into pipeline
     storeData : pipeline1
       port map (clk => clk, resetPL1 => resetPipeline, storedPC => sAddResult, storedInstruction => sStoreInstr, getPC => pcOut, getinstruction => instructionOut);
 end behavioral;
