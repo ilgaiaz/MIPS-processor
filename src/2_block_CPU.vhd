@@ -1,6 +1,7 @@
 --Michele Gaiarin
 --University project for the development of a MIPS
---Sign extend : extend logic vector from 16 to 32 bit
+--Second macro block of CPU.
+--Components : registers, sign Extend, control unit and pipeline2
 --2_block_CPU.vhd
 
 library IEEE;
@@ -11,7 +12,7 @@ entity instructionPartition is
   port(
     --pipeline signal
     clk               : in std_logic;
-    resetPipeline2     : in std_logic;
+    resetPipeline2    : in std_logic;
     --Registers external input
     regWriteFlag      : in std_logic;
     regWrite          : in std_logic_vector(4 downto 0);
@@ -35,8 +36,8 @@ entity instructionPartition is
     readData1Out      : out std_logic_vector(31 downto 0);
     readData2Out      : out std_logic_vector(31 downto 0);
     extendedSignal    : out std_logic_vector(31 downto 0);
-    registerRD        : out std_logic_vector(4 downto 0);
-    registerRT        : out std_logic_vector(4 downto 0)
+    registerRT        : out std_logic_vector(4 downto 0);
+    registerRD        : out std_logic_vector(4 downto 0)
   );
 end instructionPartition;
 
@@ -104,24 +105,24 @@ architecture behavioral of instructionPartition is
       --Stored write registers from "getInstruction"
       --2 type of instruction Rtype or Itype -> save both of them 
       --then control unit select the right one
-      storedWriteReg1 : in std_logic_vector(4 downto 0);
-      storedWriteReg2 : in std_logic_vector(4 downto 0);
+      storedWriteRegRT  : in std_logic_vector(4 downto 0);
+      storedWriteRegRD  : in std_logic_vector(4 downto 0);
       --OUTPUT
-      getMemToReg  : out std_logic;
-      getRegWrite  : out std_logic;
-      getJump      : out std_logic;
-      getBranch    : out std_logic;        
-      getMemRead   : out std_logic;
-      getMemWrite  : out std_logic;
-      getRegDst    : out std_logic;
-      getAluSrc    : out std_logic;
-      getAluOp     : out std_logic_vector(3 downto 0);
-      getPC        : out std_logic_vector(31 downto 0);
-      getReadData1 : out std_logic_vector(31 downto 0);
-      getReadData2 : out std_logic_vector(31 downto 0);
-      getSignExt   : out std_logic_vector(31 downto 0);
-      getWriteReg1 : out std_logic_vector(4 downto 0);
-      getWriteReg2 : out std_logic_vector(4 downto 0)
+      getMemToReg   : out std_logic;
+      getRegWrite   : out std_logic;
+      getJump       : out std_logic;
+      getBranch     : out std_logic;        
+      getMemRead    : out std_logic;
+      getMemWrite   : out std_logic;
+      getRegDst     : out std_logic;
+      getAluSrc     : out std_logic;
+      getAluOp      : out std_logic_vector(3 downto 0);
+      getPC         : out std_logic_vector(31 downto 0);
+      getReadData1  : out std_logic_vector(31 downto 0);
+      getReadData2  : out std_logic_vector(31 downto 0);
+      getSignExt    : out std_logic_vector(31 downto 0);
+      getWriteRegRT : out std_logic_vector(4 downto 0);
+      getWriteRegRD : out std_logic_vector(4 downto 0)
     );
   end component;
   
@@ -132,6 +133,7 @@ architecture behavioral of instructionPartition is
   signal sAluOp : std_logic_vector(3 downto 0);
   
   begin
+    
     extendSignal : signExtend
       port map (input_signal => instruction(15 downto 0), output_signal => sExtendResult);
     
@@ -147,9 +149,9 @@ architecture behavioral of instructionPartition is
       port map (clk => clk, resetPL => resetPipeline2, storedMemToReg => sMemToReg, storedRegWrite => sRegWrite, storedJump => sJump, storedBranch => sBranch,
         storedMemRead => sMemRead, storedMemWrite => sMemWrite, storedRegDst => sRegDst, storedAluSrc => sAluSrc, storedAluOp => sAluOp, 
         storedPC => programCounterIn, storedReadData1 => sReadData1, storedReadData2 => sReadData2, storedSignExt => sExtendResult, 
-        storedWriteReg1 => instruction(20 downto 16) , storedWriteReg2 => instruction(15 downto 11), getMemToReg => memToRegOut2, getRegWrite => regWriteOut2,
+        storedWriteRegRT => instruction(20 downto 16) , storedWriteRegRD => instruction(15 downto 11), getMemToReg => memToRegOut2, getRegWrite => regWriteOut2,
         getJump => jumpOut2, getBranch => branchOut2, getMemRead => memReadOut2, getMemWrite => memWriteOut2, getRegDst => regDstOut2, getAluSrc => aluSrcOut2,
-        getAluOp => aluOpOut2, getPC => programCounterOut2, getReadData1 => readData1Out, getReadData2 =>readData2Out, getSignExt => extendedSignal, 
-        getWriteReg1 => registerRD, getWriteReg2 => registerRT);
+        getAluOp => aluOpOut2, getPC => programCounterOut2, getReadData1 => readData1Out, getReadData2 => readData2Out, getSignExt => extendedSignal, 
+        getWriteRegRT => registerRT, getWriteRegRD => registerRD);
         
 end behavioral;

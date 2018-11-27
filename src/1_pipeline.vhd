@@ -1,6 +1,6 @@
 --Michele Gaiarin
 --University project for the development of a MIPS
---Pipeline1 : first pipeline in the mips. Store PC+4 and getInstruction
+--Pipeline1 : first pipeline inthe mips. Store PC+4 and getInstruction
 --1_pipeline.vhd
 
 library IEEE;
