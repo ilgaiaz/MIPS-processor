@@ -10,19 +10,19 @@ use IEEE.numeric_std.all;
 entity instructionFetch is
   port(
     --PC signal
-    clk               : in std_logic;
-    resetProgCounter  : in std_logic;
+    clk                 : in std_logic;
+    resetProgCounter    : in std_logic;
     --Pipeline signal
-    resetPipeline     : in std_logic;
+    resetPipeline1      : in std_logic;
     --Branch mux signal
-    muxBranchControl  : in std_logic;
-    muxBranchExtIn    : in std_logic_vector(31 downto 0);
+    muxBranchControlIn1 : in std_logic;
+    muxBranchExtIn1     : in std_logic_vector(31 downto 0);
     --Jump mux signal
-    muxJumpControl    : in std_logic;
-    muxJumpExtIn      : in std_logic_vector(31 downto 0);
+    muxJumpControlIn1   : in std_logic;
+    muxJumpExtIn1       : in std_logic_vector(31 downto 0);
     --Output
-    pcOut             : out std_logic_vector(31 downto 0);
-    instructionOut    : out std_logic_vector(31 downto 0)
+    pcOut1              : out std_logic_vector(31 downto 0);
+    instructionOut1     : out std_logic_vector(31 downto 0)
   );
 end instructionFetch;
 
@@ -92,11 +92,11 @@ architecture behavioral of instructionFetch is
     --Select PC + 4 or branch address
     branchMux : mux
       generic map (32)
-      port map (controlSignal => muxBranchControl, signal1 => sAddResult, signal2 => muxBranchExtIn, selectedSignal => sMuxBOut);
+      port map (controlSignal => muxBranchControlIn1, signal1 => sAddResult, signal2 => muxBranchExtIn1, selectedSignal => sMuxBOut);
     --Select the previous mux's result or jump address 
     jumpMux : mux
       generic map (32)
-      port map (controlSignal => muxJumpControl, signal1 => sMuxBOut, signal2 => muxJumpExtIn, selectedSignal => pcIn);
+      port map (controlSignal => muxJumpControlIn1, signal1 => sMuxBOut, signal2 => muxJumpExtIn1, selectedSignal => pcIn);
     --Get previous result and get next address  
     nextAddress : programCounter
       port map (clk => clk, resetPC => resetProgCounter , nextAddress => pcIn, currentAddress => sOutPC);
@@ -109,5 +109,5 @@ architecture behavioral of instructionFetch is
       port map (instrMemIn => sOutPC, instruction => sStoreInstr);
     --Store data into pipeline
     storeData : pipeline1
-      port map (clk => clk, resetPL1 => resetPipeline, storedPC => sAddResult, storedInstruction => sStoreInstr, getPC => pcOut, getinstruction => instructionOut);
+      port map (clk => clk, resetPL1 => resetPipeline1, storedPC => sAddResult, storedInstruction => sStoreInstr, getPC => pcOut1, getinstruction => instructionOut1);
 end behavioral;
