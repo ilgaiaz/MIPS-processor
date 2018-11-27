@@ -8,7 +8,7 @@ use IEEE.std_logic_1164.all;
 use IEEE.std_logic_unsigned.all;
 use IEEE.numeric_std.all;
 
-entity shifter_left is
+entity shifterLeft is
   generic(
     inputDim     : natural := 32;
     outputDim    : natural := 32;
@@ -18,9 +18,9 @@ entity shifter_left is
     inputV   : in std_logic_vector(inputDim - 1 downto 0);
     outputV  : out std_logic_vector(outputDim - 1 downto 0)
   );
-end shifter_left;
+end shifterLeft;
 
-architecture behavioral of shifter_left is
+architecture behavioral of shifterLeft is
 
   signal resize_input : std_logic_vector(outputDim - 1 downto 0);
   

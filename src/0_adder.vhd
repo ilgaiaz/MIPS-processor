@@ -15,7 +15,7 @@ entity adder is
   port(
     addend1  : in std_logic_vector(dimension - 1 downto 0);
     addend2  : in std_logic_vector(dimension - 1 downto 0);
-    sum       : out std_logic_vector(dimension - 1 downto 0)
+    sum      : out std_logic_vector(dimension - 1 downto 0)
   );
 end adder;
 

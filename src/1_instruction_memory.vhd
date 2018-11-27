@@ -10,14 +10,14 @@ use IEEE.numeric_std.all;
 use STD.textio.all;
 use ieee.std_logic_textio.all;
 
-entity instruction_memory is
+entity instructionMemory is
   port (
-    instrMemIn       :  in std_logic_vector (31 downto 0); --Program Counter input
-    instruction   :  out std_logic_vector (31 downto 0) --create an output that pass the instruction read from instruction.txt
+    instrMemIn  :  in std_logic_vector (31 downto 0); --Program Counter input
+    instruction :  out std_logic_vector (31 downto 0) --create an output that pass the instruction read from instruction.txt
   );
-end instruction_memory;
+end instructionMemory;
 
-architecture behavioral of instruction_memory is
+architecture behavioral of instructionMemory is
   
   
   file fileInstructions     : text;                         --define varibale for open instruction file

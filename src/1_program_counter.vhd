@@ -7,16 +7,16 @@ library IEEE;
 use IEEE.std_logic_1164.all;
 use IEEE.numeric_std.all;
 
-entity program_counter is
+entity programCounter is
   port (
     clk            : in std_logic;
     resetPC        : in std_logic;
     nextAddress    : in std_logic_vector(31 downto 0);
     currentAddress : out std_logic_vector(31 downto 0)
   );
-end program_counter;
+end programCounter;
 
-architecture behavioral of program_counter is
+architecture behavioral of programCounter is
   
   begin
     

@@ -1,14 +1,13 @@
 --Michele Gaiarin
 --University project for the development of a MIPS
---Instruction_fetch : sub component of CPU (PC + instruction memory + adder (+4) + 2 x Mux)
---Mux components : select branch and jump signal if it's the operation to do. 
---1_instruction_fetch.vhd
+--Instruction_fetch : sub component of CPU (PC + instruction memory + adder (+4))   
+----1_block_CPU.vhd
 
 library IEEE;
 use IEEE.std_logic_1164.all;
 use IEEE.numeric_std.all;
 
-entity instruction_fetch is
+entity instructionFetch is
   port(
     --PC signal
     clk               : in std_logic;
@@ -25,11 +24,11 @@ entity instruction_fetch is
     pcOut             : out std_logic_vector(31 downto 0);
     instructionOut    : out std_logic_vector(31 downto 0)
   );
-end instruction_fetch;
+end instructionFetch;
 
-architecture behavioral of instruction_fetch is
+architecture behavioral of instructionFetch is
 
-  component program_counter is
+  component programCounter is
     port (
       clk            : in std_logic;
       resetPC        : in std_logic;
@@ -38,7 +37,7 @@ architecture behavioral of instruction_fetch is
     );
   end component;
   
-  component instruction_memory is
+  component instructionMemory is
     port (
       instrMemIn    :  in std_logic_vector (31 downto 0); --Program Counter input
       instruction   :  out std_logic_vector (31 downto 0) --create an output that pass the instruction read from instruction.txt
@@ -98,14 +97,14 @@ architecture behavioral of instruction_fetch is
       generic map (32)
       port map (controlSignal => muxJumpControl, signal1 => sMuxBOut, signal2 => muxJumpExtIn, selectedSignal => pcIn);
       
-    programCounter : program_counter
+    nextInstruction : programCounter
       port map (clk => clk, resetPC => resetProgCounter , nextAddress => pcIn, currentAddress => sOutPC);
     
     sum : adder
       generic map (32)
       port map (addend1 => sOutPC, addend2 => sPlusFour, sum => sAddResult);
     
-    get_memory : instruction_memory
+    get_memory : instructionMemory
       port map (instrMemIn => sOutPC, instruction => sStoreInstr);
     
     storeData : pipeline1
