@@ -32,6 +32,7 @@ entity instructionPartition is
     aluSrcOut2          : out std_logic;
     aluOpOut2           : out std_logic_vector(3 downto 0);
     --Various datas get from instruction
+    jumpAddrOut2        : out std_logic_vector(31 downto 0);
     programCounterOut2  : out std_logic_vector(31 downto 0);
     readData1Out2       : out std_logic_vector(31 downto 0);
     readData2Out2       : out std_logic_vector(31 downto 0);
@@ -46,7 +47,7 @@ architecture behavioral of instructionPartition is
   component control is
     port(
       opcode        : in std_logic_vector(5 downto 0);
-      functField   : in std_logic_vector(5 downto 0);
+      functField    : in std_logic_vector(5 downto 0);
       regDst        : out std_logic;
       jump          : out std_logic;
       branch        : out std_logic;
@@ -78,6 +79,18 @@ architecture behavioral of instructionPartition is
     );
   end component;
   
+  component shifterLeft is
+    generic(
+      inputDim     : natural := 32;
+      outputDim    : natural := 32;
+      bitToShift   : natural := 2 
+    );  
+    port(
+      inputV   : in std_logic_vector(inputDim - 1 downto 0);
+      outputV  : out std_logic_vector(outputDim - 1 downto 0)
+    );
+  end component;
+  
   component pipeline2 is
     port (
       clk             : in std_logic;
@@ -95,7 +108,8 @@ architecture behavioral of instructionPartition is
       storedRegDst    : in std_logic;
       storedAluSrc    : in std_logic;
       storedAluOp     : in std_logic_vector(3 downto 0);
-      --Store PC +4
+      --Store PC +4 and Jump
+      storedJumpAddr  : in std_logic_vector(31 downto 0);
       storedPC        : in std_logic_vector(31 downto 0);
       --Store data from component "registers"
       storedReadData1 : in std_logic_vector(31 downto 0);
@@ -117,6 +131,7 @@ architecture behavioral of instructionPartition is
       getRegDst     : out std_logic;
       getAluSrc     : out std_logic;
       getAluOp      : out std_logic_vector(3 downto 0);
+      getJumpAddr   : out std_logic_vector(31 downto 0);
       getPC         : out std_logic_vector(31 downto 0);
       getReadData1  : out std_logic_vector(31 downto 0);
       getReadData2  : out std_logic_vector(31 downto 0);
@@ -128,9 +143,12 @@ architecture behavioral of instructionPartition is
   
   signal sExtendResult : std_logic_vector(31 downto 0);
   signal sReadData1, sReadData2 : std_logic_vector(31 downto 0);
+  signal sShiftedInstr : std_logic_vector(27 downto 0);
+  signal sJumpAddr : std_logic_vector(31 downto 0);
   --Cotrol output signal
-  signal sRegDst, sJump, sBranch, sMemRead, sMemWrite, sMemToReg, sAluSrc, sRegWrite : std_logic;
+  signal sRegDst, sJump, sBranch, sMemRead, sMemWrite, sMemToReg, sAluSrc, sRegWrite : std_logic := '0';
   signal sAluOp : std_logic_vector(3 downto 0);
+  signal prova : std_logic := '1';
   
   begin
     
@@ -144,14 +162,19 @@ architecture behavioral of instructionPartition is
     setControlFlag : control
       port map (opcode => instructionIn2(31 downto 26), functField => instructionIn2(5 downto 0), regDst => sRegDst, jump => sJump, branch => sBranch, 
         memRead => sMemRead, memWrite => sMemWrite, memToReg => sMemToReg, aluSrc => sAluSrc, regWrite => sRegWrite, aluOperation => sAluOp);
-        
+    
+    shiftInstruction : shifterLeft
+      generic map (26, 28, 2)
+      port map (inputV => instructionIn2(25 downto 0), outputV => sShiftedInstr);
+      
+    sJumpAddr <= programCounterIn2(31 downto 28) & sShiftedInstr;
+    
     storeData : pipeline2 
       port map (clk => clk, resetPL => resetPipeline2, storedMemToReg => sMemToReg, storedRegWrite => sRegWrite, storedJump => sJump, storedBranch => sBranch,
         storedMemRead => sMemRead, storedMemWrite => sMemWrite, storedRegDst => sRegDst, storedAluSrc => sAluSrc, storedAluOp => sAluOp, 
-        storedPC => programCounterIn2, storedReadData1 => sReadData1, storedReadData2 => sReadData2, storedSignExt => sExtendResult, 
-        storedWriteRegRT => instructionIn2(20 downto 16) , storedWriteRegRD => instructionIn2(15 downto 11), getMemToReg => memToRegOut2, getRegWrite => regWriteOut2,
-        getJump => jumpOut2, getBranch => branchOut2, getMemRead => memReadOut2, getMemWrite => memWriteOut2, getRegDst => regDstOut2, getAluSrc => aluSrcOut2,
-        getAluOp => aluOpOut2, getPC => programCounterOut2, getReadData1 => readData1Out2, getReadData2 => readData2Out2, getSignExt => extendedSignalOut2, 
-        getWriteRegRT => registerRTOut2, getWriteRegRD => registerRDOut2);
+        storedJumpAddr => sJumpAddr, storedPC => programCounterIn2, storedReadData1 => sReadData1, storedReadData2 => sReadData2, storedSignExt => sExtendResult, 
+        storedWriteRegRT => instructionIn2(20 downto 16) , storedWriteRegRD => instructionIn2(15 downto 11), getMemToReg => memToRegOut2, 
+        getRegWrite =>regWriteOut2, getJump => jumpOut2, getBranch => branchOut2, getMemRead => memReadOut2, getMemWrite => memWriteOut2, getRegDst => regDstOut2, getAluSrc => aluSrcOut2, getAluOp => aluOpOut2, getJumpAddr => jumpAddrOut2 ,getPC => programCounterOut2, getReadData1 => readData1Out2, 
+        getReadData2 => readData2Out2, getSignExt => extendedSignalOut2, getWriteRegRT => registerRTOut2, getWriteRegRD => registerRDOut2);
         
 end behavioral;

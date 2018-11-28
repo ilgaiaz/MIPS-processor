@@ -24,7 +24,8 @@ entity pipeline2 is
     storedRegDst    : in std_logic;
     storedAluSrc    : in std_logic;
     storedAluOp     : in std_logic_vector(3 downto 0);
-    --Store PC +4
+    --Store PC +4 and Jump
+    storedJumpAddr  : in std_logic_vector(31 downto 0);
     storedPC        : in std_logic_vector(31 downto 0);
     --Store data from component "registers"
     storedReadData1 : in std_logic_vector(31 downto 0);
@@ -46,6 +47,7 @@ entity pipeline2 is
     getRegDst     : out std_logic;
     getAluSrc     : out std_logic;
     getAluOp      : out std_logic_vector(3 downto 0);
+    getJumpAddr   : out std_logic_vector(31 downto 0);
     getPC         : out std_logic_vector(31 downto 0);
     getReadData1  : out std_logic_vector(31 downto 0);
     getReadData2  : out std_logic_vector(31 downto 0);
@@ -73,6 +75,7 @@ architecture behavioral of pipeline2 is
             getRegDst    <= '0';
             getAluSrc    <= '0';
             getAluOp     <= "0000";
+            getJumpAddr  <= "00000000000000000000000000000000";
             getPC        <= "00000000000000000000000000000000";
             getReadData1 <= "00000000000000000000000000000000";
             getReadData2 <= "00000000000000000000000000000000";
@@ -89,6 +92,7 @@ architecture behavioral of pipeline2 is
             getRegDst     <= storedRegDst;
             getAluSrc     <= storedAluSrc;
             getAluOp      <= storedAluOp;
+            getJumpAddr   <= storedJumpAddr;
             getPC         <= storedPC;
             getReadData1  <= storedReadData1;
             getReadData2  <= storedReadData2;

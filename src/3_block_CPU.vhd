@@ -22,6 +22,7 @@ entity dataElaboration is
     aluSrcIn3         : in std_logic;
     aluOpIn3          : in std_logic_vector(3 downto 0);
     --Various datas get from instruction
+    jumpAddrIn3       : in std_logic_vector(31 downto 0);
     programCounterIn3 : in std_logic_vector(31 downto 0);
     readData1In3      : in std_logic_vector(31 downto 0);
     readData2In3      : in std_logic_vector(31 downto 0);
@@ -35,6 +36,7 @@ entity dataElaboration is
     branchOut3        : out std_logic;        
     memReadOut3       : out std_logic;
     memWriteOut3      : out std_logic;
+    jumpAddrOut3      : out std_logic_vector(31 downto 0);
     branchAddrOut3    : out std_logic_vector(31 downto 0);
     zeroFlagOut3      : out std_logic;
     aluResultOut3     : out std_logic_vector(31 downto 0);
@@ -58,7 +60,7 @@ architecture behavioral of dataElaboration is
   component pipeline3 is
     port (
       clk             : in std_logic;
-      resetPL2        : in std_logic;
+      resetPL         : in std_logic;
       --Store control unit signal
       --WB:
       storedMemToReg  : in std_logic;
@@ -69,6 +71,7 @@ architecture behavioral of dataElaboration is
       storedMemRead   : in std_logic;
       storedMemWrite  : in std_logic;
       --BranchAddr
+      storedJumpAddr  : in std_logic_vector(31 downto 0);
       storedBranchAddr: in std_logic_vector(31 downto 0);
       --ALU 
       storedZero      : in std_logic;
@@ -84,6 +87,7 @@ architecture behavioral of dataElaboration is
       getBranch     : out std_logic;        
       getMemRead    : out std_logic;
       getMemWrite   : out std_logic;
+      getJumpAddr   : out std_logic_vector(31 downto 0);
       getBranchAddr : out std_logic_vector(31 downto 0);
       getZero       : out std_logic;
       getAluResult  : out std_logic_vector(31 downto 0);
@@ -154,10 +158,10 @@ architecture behavioral of dataElaboration is
       port map (addend1 => programCounterIn3, addend2 => sExtendedSignal, sum => sBranchAddrRes);
       
     pipeline : pipeline3
-      port map (clk => clk, resetPL2 => resetPipeline3, storedMemToReg => memToRegIn3, storedRegWrite => regWriteIn3, storedJump => jumpIn3, 
-        storedBranch => branchIn3, storedMemRead => memReadIn3, storedMemWrite => memWriteIn3, storedBranchAddr => sBranchAddrRes, storedZero => sZero,
-        storedAluResult => sAluResult, storedReadData2 => readData2In3, storedWriteReg => sSelectedWriteReg, getMemToReg => memToRegOut3, 
+      port map (clk => clk, resetPL => resetPipeline3, storedMemToReg => memToRegIn3, storedRegWrite => regWriteIn3, storedJump => jumpIn3, 
+        storedBranch => branchIn3, storedMemRead => memReadIn3, storedMemWrite => memWriteIn3, storedJumpAddr => jumpAddrIn3, storedBranchAddr => sBranchAddrRes, storedZero => sZero, storedAluResult => sAluResult, storedReadData2 => readData2In3, storedWriteReg => sSelectedWriteReg, getMemToReg => memToRegOut3, 
         getRegWrite => regWriteOut3, getJump => jumpOut3, getBranch => branchOut3, getMemRead => memReadOut3, getMemWrite => memWriteOut3, 
-        getBranchAddr => branchAddrOut3, getZero => zeroFlagOut3, getAluResult => aluResultOut3, getReadData2 => readData2Out3, getWriteReg => registerOut3);
+        getJumpAddr => jumpAddrOut3, getBranchAddr => branchAddrOut3, getZero => zeroFlagOut3, getAluResult => aluResultOut3, getReadData2 => readData2Out3, 
+        getWriteReg => registerOut3);
       
 end behavioral;

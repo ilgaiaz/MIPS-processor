@@ -9,7 +9,7 @@ use IEEE.numeric_std.all;
 entity pipeline3 is
   port (
     clk             : in std_logic;
-    resetPL2        : in std_logic;
+    resetPL        : in std_logic;
     --Store control unit signal
     --WB:
     storedMemToReg  : in std_logic;
@@ -20,6 +20,7 @@ entity pipeline3 is
     storedMemRead   : in std_logic;
     storedMemWrite  : in std_logic;
     --BranchAddr
+    storedJumpAddr  : in std_logic_vector(31 downto 0);
     storedBranchAddr: in std_logic_vector(31 downto 0);
     --ALU 
     storedZero      : in std_logic;
@@ -35,6 +36,7 @@ entity pipeline3 is
     getBranch     : out std_logic;        
     getMemRead    : out std_logic;
     getMemWrite   : out std_logic;
+    getJumpAddr   : out std_logic_vector(31 downto 0);
     getBranchAddr : out std_logic_vector(31 downto 0);
     getZero       : out std_logic;
     getAluResult  : out std_logic_vector(31 downto 0);
@@ -47,16 +49,17 @@ architecture behavioral of pipeline3 is
   
   begin
     
-    loadAddress : process(clk, resetPL2)       --Activate the process when the clock change his status 
+    loadAddress : process(clk, resetPL)       --Activate the process when the clock change his status 
       begin
         checkClock : 
-          if resetPL2 = '1' then 
+          if resetPL = '1' then 
             getMemToReg   <= '0';
             getRegWrite   <= '0';
             getJump       <= '0';
             getBranch     <= '0';        
             getMemRead    <= '0';
             getMemWrite   <= '0';
+            getJumpAddr   <= "00000000000000000000000000000000";
             getBranchAddr <= "00000000000000000000000000000000";
             getZero       <= '0'; 
             getAluResult  <= "00000000000000000000000000000000";
@@ -69,6 +72,7 @@ architecture behavioral of pipeline3 is
             getBranch     <= storedBranch;        
             getMemRead    <= storedMemRead;
             getMemWrite   <= storedMemWrite;
+            getJumpAddr   <= storedJumpAddr;
             getBranchAddr <= storedBranchAddr;
             getZero       <= storedZero;
             getAluResult  <= storedAluResult;
