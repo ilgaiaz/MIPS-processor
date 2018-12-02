@@ -1,6 +1,7 @@
 --Michele Gaiarin
 --University project for the development of a MIPS
---Instruction_fetch : sub component of CPU (PC + instruction memory + adder (+4))   
+--Instruction_fetch : sub component of CPU 
+--component : PC, instruction memory and adder   
 ----1_block_CPU.vhd
 
 library IEEE;

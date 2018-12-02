@@ -1,6 +1,7 @@
 --Michele Gaiarin
 --University project for the development of a MIPS
---   
+--Third macro block of CPU
+--Components : ALU, pipeline3, adder, shifter and mux
 --3_block_CPU.vhd
 
 library IEEE;
@@ -134,7 +135,7 @@ architecture behavioral of dataElaboration is
   signal sZero : std_logic;
   signal sSelectedWriteReg : std_logic_vector(4 downto 0);
   signal sAluData2 , sAluResult : std_logic_vector(31 downto 0);
-  signal sExtendedSignal, sBranchAddrRes : std_logic_vector(31 downto 0);
+  signal sExtendedShiftedSignal, sBranchAddrRes : std_logic_vector(31 downto 0);
   
   begin
   
@@ -148,14 +149,14 @@ architecture behavioral of dataElaboration is
 
     shiftSignal : shifterLeft
       generic map (32, 32, 2)
-      port map (inputV => extendedSignalIn3, outputV => sExtendedSignal);
+      port map (inputV => extendedSignalIn3, outputV => sExtendedShiftedSignal);
       
     aluElaboration : alu
       port map (input1 => readData1In3, input2 => sAluData2, aluControlInput => aluOpIn3, zeroControl => sZero, aluResult => sAluResult);
       
     branchAdd : adder
       generic map (32)
-      port map (addend1 => programCounterIn3, addend2 => sExtendedSignal, sum => sBranchAddrRes);
+      port map (addend1 => programCounterIn3, addend2 => sExtendedShiftedSignal, sum => sBranchAddrRes);
       
     pipeline : pipeline3
       port map (clk => clk, resetPL => resetPipeline3, storedMemToReg => memToRegIn3, storedRegWrite => regWriteIn3, storedJump => jumpIn3, 

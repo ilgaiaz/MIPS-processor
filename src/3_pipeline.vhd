@@ -47,6 +47,7 @@ end pipeline3;
 
 architecture behavioral of pipeline3 is
   
+  signal TestJump : std_logic;
   begin
     
     loadAddress : process(clk, resetPL)       --Activate the process when the clock change his status 
@@ -65,7 +66,7 @@ architecture behavioral of pipeline3 is
             getAluResult  <= "00000000000000000000000000000000";
             getReadData2  <= "00000000000000000000000000000000";
             getWriteReg   <= "00000";
-          elsif clk = '1' and clk'event then 
+          elsif clk = '1' and clk'event then
             getMemToReg   <= storedMemToReg;
             getRegWrite   <= storedRegWrite;
             getJump       <= storedJump;
@@ -80,5 +81,4 @@ architecture behavioral of pipeline3 is
             getWriteReg   <= storedWriteReg;
           end if;
     end process loadAddress;
-    
 end behavioral;

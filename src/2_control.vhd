@@ -179,7 +179,7 @@ architecture behavioral of control is
             memToReg  <= '1';   --X?
             aluSrc    <= '0';
             regWrite  <= '0';
-            aluOperation     <= "0001";
+            aluOperation  <= "0001";
             
           --Unconditional jump "00001X"
           when "000010" => 
@@ -191,7 +191,7 @@ architecture behavioral of control is
             memToReg  <= '1';   --X?
             aluSrc    <= '0';   --X?
             regWrite  <= '0';
-            aluOperation     <= "XXXX";
+            aluOperation  <= "XXXX";
           
           when others => null; 
           
