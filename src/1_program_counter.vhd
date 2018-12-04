@@ -18,16 +18,19 @@ end programCounter;
 
 architecture behavioral of programCounter is
   
+  signal address : std_logic_vector(31 downto 0);
   begin
     
     loadAddress : process(clk, resetPC)       --Activate the process when the clock change his status 
       begin
         checkClock : 
           if resetPC = '1' then 
-            currentAddress <= "00000000000000000000000000000000";
+            address <= "00000000000000000000000000000000";
           elsif clk = '1' and clk'event then 
-            currentAddress <= nextAddress;
+            address <= nextAddress;
           end if;
     end process loadAddress;
+    
+    currentAddress <= address;
     
 end behavioral;

@@ -32,24 +32,34 @@ end pipeline4;
 
 architecture behavioral of pipeline4 is
   
+  signal sMemToReg, sRegWrite : std_logic;
+  signal sAluresult, sReadDataMem : std_logic_vector(31 downto 0);
+  signal sWriteReg : std_logic_vector(4 downto 0);
+  
   begin
     
     loadAddress : process(clk, resetPL)       --Activate the process when the clock change his status 
       begin
         checkClock : 
           if resetPL = '1' then 
-            getMemToReg     <= '0';
-            getRegWrite     <= '0';
-            getReadDataMem  <= "00000000000000000000000000000000";
-            getAluResult    <= "00000000000000000000000000000000";
-            getWriteReg     <= "00000";
+            sMemToReg     <= '0';
+            sRegWrite     <= '0';
+            sReadDataMem  <= "00000000000000000000000000000000";
+            sAluResult    <= "00000000000000000000000000000000";
+            sWriteReg     <= "00000";
           elsif clk = '1' and clk'event then 
-            getMemToReg     <= storedMemToReg;
-            getRegWrite     <= storedRegWrite;
-            getReadDataMem  <= storedReadDataMem;
-            getAluResult    <= storedAluResult;
-            getWriteReg     <= storedWriteReg;
+            sMemToReg     <= storedMemToReg;
+            sRegWrite     <= storedRegWrite;
+            sReadDataMem  <= storedReadDataMem;
+            sAluResult    <= storedAluResult;
+            sWriteReg     <= storedWriteReg;
           end if;
     end process loadAddress;
+    
+    getMemToReg     <= sMemToReg;
+    getRegWrite     <= sRegWrite;
+    getReadDataMem  <= sReadDataMem;
+    getAluResult    <= sAluResult;
+    getWriteReg     <= sWriteReg;
     
 end behavioral;

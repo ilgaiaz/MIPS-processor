@@ -60,46 +60,68 @@ end pipeline2;
 
 architecture behavioral of pipeline2 is
   
+  signal sMemToReg, sRegWrite, sJump, sBranch, sMemRead, sMemWrite, sRegDst, sAluSrc : std_logic;
+  signal sAluOP : std_logic_vector(3 downto 0);
+  signal sJumpAddr, sPC, sReadData1, sReadData2, sSignExt : std_logic_vector(31 downto 0);
+  signal sWriteRegRT, sWriteRegRD : std_logic_vector(4 downto 0);
+  
   begin
     
     loadAddress : process(clk, resetPL)       --Activate the process when the clock change his status 
       begin
         checkClock : 
           if resetPL = '1' then 
-            getMemToReg  <= '0';
-            getRegWrite  <= '0';
-            getJump      <= '0';
-            getBranch    <= '0';        
-            getMemRead   <= '0';
-            getMemWrite  <= '0';
-            getRegDst    <= '0';
-            getAluSrc    <= '0';
-            getAluOp     <= "0000";
-            getJumpAddr  <= "00000000000000000000000000000000";
-            getPC        <= "00000000000000000000000000000000";
-            getReadData1 <= "00000000000000000000000000000000";
-            getReadData2 <= "00000000000000000000000000000000";
-            getSignExt   <= "00000000000000000000000000000000";
-            getWriteRegRT <= "00000";
-            getWriteRegRD <= "00000";
+            sMemToReg  <= '0';
+            sRegWrite  <= '0';
+            sJump      <= '0';
+            sBranch    <= '0';        
+            sMemRead   <= '0';
+            sMemWrite  <= '0';
+            sRegDst    <= '0';
+            sAluSrc    <= '0';
+            sAluOp     <= "0000";
+            sJumpAddr  <= "00000000000000000000000000000000";
+            sPC        <= "00000000000000000000000000000000";
+            sReadData1 <= "00000000000000000000000000000000";
+            sReadData2 <= "00000000000000000000000000000000";
+            sSignExt   <= "00000000000000000000000000000000";
+            sWriteRegRT <= "00000";
+            sWriteRegRD <= "00000";
           elsif clk = '1' and clk'event then 
-            getMemToReg   <= storedMemToReg;
-            getRegWrite   <= storedRegWrite;
-            getJump       <= storedJump;
-            getBranch     <= storedBranch;        
-            getMemRead    <= storedMemRead;
-            getMemWrite   <= storedMemWrite;
-            getRegDst     <= storedRegDst;
-            getAluSrc     <= storedAluSrc;
-            getAluOp      <= storedAluOp;
-            getJumpAddr   <= storedJumpAddr;
-            getPC         <= storedPC;
-            getReadData1  <= storedReadData1;
-            getReadData2  <= storedReadData2;
-            getSignExt    <= storedSignExt;
-            getWriteRegRT <= storedWriteRegRT;
-            getWriteRegRD <= storedWriteRegRD;
+            sMemToReg   <= storedMemToReg;
+            sRegWrite   <= storedRegWrite;
+            sJump       <= storedJump;
+            sBranch     <= storedBranch;        
+            sMemRead    <= storedMemRead;
+            sMemWrite   <= storedMemWrite;
+            sRegDst     <= storedRegDst;
+            sAluSrc     <= storedAluSrc;
+            sAluOp      <= storedAluOp;
+            sJumpAddr   <= storedJumpAddr;
+            sPC         <= storedPC;
+            sReadData1  <= storedReadData1;
+            sReadData2  <= storedReadData2;
+            sSignExt    <= storedSignExt;
+            sWriteRegRT <= storedWriteRegRT;
+            sWriteRegRD <= storedWriteRegRD;
           end if;
     end process loadAddress;
+    
+    getMemToReg   <= sMemToReg;
+    getRegWrite   <= sRegWrite;
+    getJump       <= sJump;
+    getBranch     <= sBranch;        
+    getMemRead    <= sMemRead;
+    getMemWrite   <= sMemWrite;
+    getRegDst     <= sRegDst;
+    getAluSrc     <= sAluSrc;
+    getAluOp      <= sAluOp;
+    getJumpAddr   <= sJumpAddr;
+    getPC         <= sPC;
+    getReadData1  <= sReadData1;
+    getReadData2  <= sReadData2;
+    getSignExt    <= sSignExt;
+    getWriteRegRT <= sWriteRegRT;
+    getWriteRegRD <= sWriteRegRD;
     
 end behavioral;

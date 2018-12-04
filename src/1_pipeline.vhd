@@ -21,18 +21,23 @@ end pipeline1;
 
 architecture behavioral of pipeline1 is
   
+  signal sInstruction, sPC : std_logic_vector(31 downto 0);
+  
   begin
     
     loadAddress : process(clk, resetPL1)       --Activate the process when the clock change his status 
       begin
         checkClock : 
           if resetPL1 = '1' then 
-            getInstruction  <= "00000000000000000000000000000000";
-            getPC           <= "00000000000000000000000000000000";
+            sInstruction  <= "00000000000000000000000000000000";
+            sPC           <= "00000000000000000000000000000000";
           elsif clk = '1' and clk'event then 
-            getInstruction  <= storedInstruction;
-            getPC           <= storedPC;
+            sInstruction  <= storedInstruction;
+            sPC           <= storedPC;
           end if;
     end process loadAddress;
+    
+    getInstruction  <= sInstruction;
+    getPC           <= sPC;
     
 end behavioral;
