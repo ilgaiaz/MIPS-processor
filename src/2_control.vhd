@@ -103,6 +103,8 @@ architecture behavioral of control is
             elsif (unsigned(functField) = "110110") then  --shft right
               aluSrc  <= '1';
               aluOperation  <= "0110";
+            elsif (unsigned(functField) = "000000") then  --pipeline reset case
+              regWrite  <= '0'; --Avoid bad write on register
             end if;
             
           --Data transfer "01XXXX"
