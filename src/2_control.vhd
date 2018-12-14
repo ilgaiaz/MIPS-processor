@@ -104,7 +104,11 @@ architecture behavioral of control is
               aluSrc  <= '1';
               aluOperation  <= "0110";
             elsif (unsigned(functField) = "000000") then  --pipeline reset case
-              regWrite  <= '0'; --Avoid bad write on register
+              regWrite  <= '0';                           --Avoid bad write on register
+              aluOperation  <= "1111";
+            else
+              regWrite  <= '0';
+              aluOperation  <= "1111";
             end if;
             
           --Data transfer "01XXXX"
@@ -163,13 +167,6 @@ architecture behavioral of control is
             aluSrc    <= '1';
             regWrite  <= '1';
             aluOperation  <= "0011"; 
-            
-            --immediateCase : case opcode(2 downto 0) is
-              --when "000"  => aluOperation  <= "0000";   --add immediate
-              --when "001"  => aluOperation  <= "0010";   --and immediate
-              --when "010"  => aluOperation  <= "0011";   --or immediate
-              --when others => null;
-            --end case immediateCase;
           
           --Conditional branch "0001XX"
           when "000100" =>      --BEQ
