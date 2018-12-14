@@ -79,7 +79,7 @@ architecture behavioral of instructionFetch is
     );
   end component;
   
-  signal pcIn         : std_logic_vector(31 downto 0);
+  signal sPcIn        : std_logic_vector(31 downto 0);
   signal sOutPC       : std_logic_vector(31 downto 0);
   signal sPlusFour    : std_logic_vector(31 downto 0);
   signal sAddResult   : std_logic_vector(31 downto 0);
@@ -97,10 +97,10 @@ architecture behavioral of instructionFetch is
     --Select the previous mux's result or jump address 
     jumpMux : mux
       generic map (32)
-      port map (controlSignal => muxJumpControlIn1, signal1 => sMuxBOut, signal2 => muxJumpExtIn1, selectedSignal => pcIn);
+      port map (controlSignal => muxJumpControlIn1, signal1 => sMuxBOut, signal2 => muxJumpExtIn1, selectedSignal => sPcIn);
     --Get previous result and get next address  
     nextAddress : programCounter
-      port map (clk => clk, resetPC => resetProgCounter , nextAddress => pcIn, currentAddress => sOutPC);
+      port map (clk => clk, resetPC => resetProgCounter , nextAddress => sPcIn, currentAddress => sOutPC);
     --Add + 4 to program counter and calc next possible address
     sum : adder
       generic map (32)
@@ -109,6 +109,6 @@ architecture behavioral of instructionFetch is
     get_memory : instructionMemory
       port map (instrMemIn => sOutPC, instruction => sStoreInstr);
     --Store data into pipeline
-    storeData : pipeline1
+    pipeline : pipeline1
       port map (clk => clk, resetPL1 => resetPipeline1, storedPC => sAddResult, storedInstruction => sStoreInstr, getPC => pcOut1, getinstruction => instructionOut1);
 end behavioral;

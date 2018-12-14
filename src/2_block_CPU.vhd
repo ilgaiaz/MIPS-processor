@@ -169,7 +169,7 @@ architecture behavioral of instructionPartition is
       
     sJumpAddr <= programCounterIn2(31 downto 28) & sShiftedInstr;
     
-    storeData : pipeline2 
+    pipeline : pipeline2 
       port map (clk => clk, resetPL => resetPipeline2, storedMemToReg => sMemToReg, storedRegWrite => sRegWrite, storedJump => sJump, storedBranch => sBranch,
         storedMemRead => sMemRead, storedMemWrite => sMemWrite, storedRegDst => sRegDst, storedAluSrc => sAluSrc, storedAluOp => sAluOp, 
         storedJumpAddr => sJumpAddr, storedPC => programCounterIn2, storedReadData1 => sReadData1, storedReadData2 => sReadData2, storedSignExt => sExtendResult, 

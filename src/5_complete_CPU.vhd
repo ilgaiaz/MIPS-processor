@@ -9,9 +9,9 @@ use IEEE.numeric_std.all;
 
 entity completeCPU is
   port(
-    clock : in std_logic;
-    rstPC : in std_logic;
-    rstPL : in std_logic
+    clock  : in std_logic;
+    rstPC  : in std_logic;
+    rstPL  : in std_logic
     );
 end completeCPU;
 
@@ -178,11 +178,11 @@ architecture behavioral of completeCPU is
   
   begin
   
-    fetching : instructionFetch
+    a_fetching : instructionFetch
       port map (clk => clock, resetProgCounter => rstPC, resetPipeline1 => rstPL, muxBranchControlIn1 => sBranchToFetch, muxBranchExtIn1 => sBranchAdrrToFetch,
         muxJumpControlIn1 => sJumpToFetch, muxJumpExtIn1 => sJumpAddrToFetch, pcOut1 => sPcToPartition, instructionOut1 => sInstructionToPartition);
     
-    instrPartition : instructionPartition
+    b_instrPartition : instructionPartition
       port map (clk => clock, resetPipeline2 => rstPL, regWriteFlagIn2 => sRegWriteFlagToFetch, regWriteIn2 => sWriteRegToFetch, dataWriteIn2 => sDataWriteToFetch,
         instructionIn2 => sInstructionToPartition, programCounterIn2 => sPcToPartition, memToRegOut2 => sMemToRegToElab, regWriteOut2 => sRegWriteToElab,
         jumpOut2 => sJumpToElab, branchOut2 => sBranchToElab, memReadOut2 => sMemReadToElab, memWriteOut2 => sMemWriteToElab, regDstOut2 => sRegDstToElab,
@@ -190,7 +190,7 @@ architecture behavioral of completeCPU is
         readData1Out2 => sReadData1ToElab, readData2Out2 => sReadData2ToElab, extendedSignalOut2 => sExtdSignToElab, registerRTOut2 => sRegRtToElab,
         registerRDOut2 => sRegRdToElab);
         
-    elaboration : dataElaboration
+    c_elaboration : dataElaboration
       port map (clk => clock, resetPipeline3 => rstPL, memToRegIn3 => sMemToRegToElab, regWriteIn3 => sRegWriteToElab,
         jumpIn3 => sJumpToElab, branchIn3 => sBranchToElab, memReadIn3 => sMemReadToElab, memWriteIn3 => sMemWriteToElab, regDstIn3 => sRegDstToElab,
         aluSrcIn3 => sAluSrcToElab, aluOpIn3 => sAluOpToElab, jumpAddrIn3 => sJumpAddrToElab, programCounterIn3 => sProgramCounterToElab, 
@@ -199,7 +199,7 @@ architecture behavioral of completeCPU is
         memReadOut3 => sMemReadToMemOp, memWriteOut3 => sMemWriteToMemOp, jumpAddrOut3 => sJumpAddrToMemOp, branchAddrOut3 => sBranchAdrrToMemOp,
         zeroFlagOut3  => sZeroFlagToMemOp, aluResultOut3 => sAluResultToMemOp, readData2Out3 => sReadData2ToMemOp, registerOut3 => sWriteRegToMemOp);
         
-    memOp : memoryOperations
+    d_memOp : memoryOperations
       port map (clk => clock, resetPipeline4 => rstPL, memToRegIn4 => sMemToRegToMemOp, regWriteIn4 => sRegWriteToMemOp, jumpIn4 => sJumpToMemOp, 
       branchIn4 => sBranchToMemOp, memReadIn4 => sMemReadToMemOp, memWriteIn4 => sMemWriteToMemOp, jumpAddrIn4 => sJumpAddrToMemOp, 
       branchAddrIn4 => sBranchAdrrToMemOp, zeroFlagIn4  => sZeroFlagToMemOp, aluResultIn4 => sAluResultToMemOp, readData2In4 => sReadData2ToMemOp, 
@@ -207,8 +207,8 @@ architecture behavioral of completeCPU is
       branchOut4 => sBranchToFetch, jumpAddrOut4 => sJumpAddrToFetch, branchAddrOut4 => sBranchAdrrToFetch, aluResultOut4 => sAluResultToMux, 
       readDataMemOut4 => sReadDataMemToMux, registerOut4 => sWriteRegToFetch);
       
-    memToRegSelector : mux 
+    e_memToRegSelector : mux 
       generic map (32)
       port map (controlSignal => sMemToRegToMux, signal1 => sAluResultToMux, signal2 => sReadDataMemToMux, selectedSignal => sDataWriteToFetch);
-    
+   
 end behavioral;

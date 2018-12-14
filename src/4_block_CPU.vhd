@@ -86,7 +86,7 @@ architecture behavioral of memoryOperations is
     dataMemoryOp : dataMemory
       port map (memWriteFlag  => memWriteIn4, memReadFlag => memReadIn4, address => aluResultIn4, writeData => readData2In4, readData => sDataFromMem);
     
-    storeReg : pipeline4
+    pipeline : pipeline4
       port map (clk => clk, resetPL => resetPipeline4, storedMemToReg => memToRegIn4, storedRegWrite => regWriteIn4, storedReadDataMem => sDataFromMem,
         storedAluResult => aluResultIn4, storedWriteReg => registerIn4, getMemToReg => memToRegOut4, getRegWrite => regWriteOut4, getReadDataMem => readDataMemOut4, getAluResult => aluResultOut4, getWriteReg => registerOut4);
         
