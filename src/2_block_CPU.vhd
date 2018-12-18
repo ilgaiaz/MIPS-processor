@@ -8,7 +8,7 @@ library IEEE;
 use IEEE.std_logic_1164.all;
 use IEEE.numeric_std.all;
 
-entity instructionPartition is
+entity instructionDecode is
   port(
     --pipeline signal
     clk                 : in std_logic;
@@ -40,9 +40,9 @@ entity instructionPartition is
     registerRTOut2      : out std_logic_vector(4 downto 0);
     registerRDOut2      : out std_logic_vector(4 downto 0)
   );
-end instructionPartition;
+end instructionDecode;
 
-architecture behavioral of instructionPartition is
+architecture behavioral of instructionDecode is
   
   component control is
     port(

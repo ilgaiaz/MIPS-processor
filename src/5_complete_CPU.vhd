@@ -31,7 +31,7 @@ architecture behavioral of completeCPU is
     );
   end component;
   
-  component instructionPartition is
+  component instructionDecode is
     port(
       --pipeline signal
       clk                 : in std_logic;
@@ -168,7 +168,7 @@ architecture behavioral of completeCPU is
     --Control
   signal sMemToRegToMemOp, sRegWriteToMemOp, sJumpToMemOp  : std_logic; 
   signal sBranchToMemOp, sMemReadToMemOp, sMemWriteToMemOp, sZeroFlagToMemOp : std_logic;
-    --Varios Data
+    --Various Data
   signal sJumpAddrToMemOp, sBranchAdrrToMemOp : std_logic_vector(31 downto 0);
   signal sReadData2ToMemOp, sAluResultToMemOp : std_logic_vector(31 downto 0);
   signal sWriteRegToMemOp : std_logic_vector(4 downto 0);
@@ -182,7 +182,7 @@ architecture behavioral of completeCPU is
       port map (clk => clock, resetProgCounter => rstPC, resetPipeline1 => rstPL, muxBranchControlIn1 => sBranchToFetch, muxBranchExtIn1 => sBranchAdrrToFetch,
         muxJumpControlIn1 => sJumpToFetch, muxJumpExtIn1 => sJumpAddrToFetch, pcOut1 => sPcToPartition, instructionOut1 => sInstructionToPartition);
     
-    b_instrPartition : instructionPartition
+    b_instrPartition : instructionDecode
       port map (clk => clock, resetPipeline2 => rstPL, regWriteFlagIn2 => sRegWriteFlagToFetch, regWriteIn2 => sWriteRegToFetch, dataWriteIn2 => sDataWriteToFetch,
         instructionIn2 => sInstructionToPartition, programCounterIn2 => sPcToPartition, memToRegOut2 => sMemToRegToElab, regWriteOut2 => sRegWriteToElab,
         jumpOut2 => sJumpToElab, branchOut2 => sBranchToElab, memReadOut2 => sMemReadToElab, memWriteOut2 => sMemWriteToElab, regDstOut2 => sRegDstToElab,
