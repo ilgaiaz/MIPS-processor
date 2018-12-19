@@ -1,0 +1,2 @@
+#!/bin/bash
+ghdl -a --workdir=work/ --ieee=synopsys $1

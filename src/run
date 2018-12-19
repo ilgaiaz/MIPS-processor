@@ -1,0 +1,13 @@
+#!/bin/bash
+#$1 is filename, $2 is the entity name
+ext_vcd="$2.vcd"
+wave_name=${1/.vhd/.vcd}
+
+set -e
+echo "Analyze : $1"
+ghdl -a --workdir=work/ --ieee=synopsys $1 
+echo "Elaborate : $2"
+ghdl -e --workdir=work/ --ieee=synopsys $2
+echo "Run : $2 and create wave: $wave_name"
+ghdl -r --workdir=work/ --ieee=synopsys $2 --stop-time=2000ns --vcd=wave/$wave_name
+gtkwave wave/$wave_name
